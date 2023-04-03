@@ -1,0 +1,51 @@
+version: "3"
+services:
+  server:
+    environment:
+      - NODE_ENV=development
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+      target: development
+    restart: unless-stopped
+    container_name: server
+    expose:
+      - "4000"
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./back:/usr/server
+      - /usr/server/node_modules
+    depends_on:
+      - db
+    command: npm run start:dev
+
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - db_data:/data/db
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+
+  client:
+    environment:
+      - NODE_ENV=development
+    build:
+      context: ./front
+      target: runner
+    container_name: client
+    volumes:
+      - ./front:/usr/app
+      - /usr/app/node_modules
+      - /usr/app/.next
+    ports:
+      - "3000:3000"
+    command: npm run dev
+
+volumes:
+  db_data: {}
