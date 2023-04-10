@@ -16,8 +16,8 @@ export default function AuthLayout({ title, children }: AuthLayoutProps) {
   return (
     <Box
       as="main"
+      flex="1"
       bg="gray.100"
-      height="100%"
       display="flex"
       justifyContent="center"
       alignItems="center"

@@ -13,10 +13,15 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoginDto } from "../types/LoginDto";
-import { useLogin } from "../api/login";
 import { loginSchema } from "../validation/loginSchema";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function LoginForm() {
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -24,15 +29,27 @@ export default function LoginForm() {
   } = useForm<LoginDto>({
     resolver: yupResolver(loginSchema),
   });
-  const login = useLogin();
+
+  const handleLogin = async (data: LoginDto) => {
+    setLoading(true);
+    const result = await signIn("credentials-auth", {
+      ...data,
+      callbackUrl: "/",
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setLoading(false);
+      return setError(true);
+    }
+
+    router.push("/");
+    setLoading(false);
+  };
 
   return (
-    <Stack
-      spacing="24px"
-      as="form"
-      onSubmit={handleSubmit((data) => login.mutate(data))}
-    >
-      {login.isError ? (
+    <Stack spacing="24px" as="form" onSubmit={handleSubmit(handleLogin)}>
+      {error ? (
         <Alert status="error">
           <AlertIcon />
           <AlertDescription>Credenciais inválidas.</AlertDescription>
@@ -57,7 +74,7 @@ export default function LoginForm() {
         />
         <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
       </FormControl>
-      <Button type="submit" isLoading={login.isLoading}>
+      <Button type="submit" isLoading={loading}>
         Login
       </Button>
       <Button variant="link" as={Link} href="/cadastro">
