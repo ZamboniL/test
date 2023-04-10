@@ -18,6 +18,7 @@ services:
       - db_user=postgres
       - db_password=postgres
       - db_name=postgres
+      - jwt_secret=secret
     volumes:
       - ./back:/usr/server
       - /usr/server/node_modules

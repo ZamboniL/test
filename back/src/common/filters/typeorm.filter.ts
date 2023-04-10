@@ -8,24 +8,31 @@ export class TypeOrmFilter extends BaseExceptionFilter {
     const response = host.switchToHttp().getResponse();
     const message: string = exception.driverError.detail;
     const code: string = exception.driverError.code;
+    const { column, value } = this.getErrorColumnAndValue(message);
 
     switch (code) {
       case '23503':
         response.status(400).json({
           statusCode: 400,
-          message: this.getForeignKeyError(message),
+          message: `'${value}' is not a valid '${column}'.`,
           error: 'Bad Request'
         });
 
         break;
+      case '23505':
+        response.status(400).json({
+          statusCode: 400,
+          message: `'${value}' is already used.`,
+          error: 'Bad Request'
+        });
       default:
         super.catch(exception, host);
         break;
     }
   }
 
-  private getForeignKeyError(message: string) {
-    const columnName = message.slice(
+  private getErrorColumnAndValue(message: string) {
+    const column = message.slice(
       message.indexOf('(') + 1,
       message.indexOf(')')
     );
@@ -34,7 +41,6 @@ export class TypeOrmFilter extends BaseExceptionFilter {
       message.indexOf('=(') + 2,
       message.indexOf(') ')
     );
-
-    return `'${value}' is not a valid '${columnName}'.`;
+    return { column, value };
   }
 }

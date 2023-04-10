@@ -5,6 +5,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Transaction } from './model/transaction.entity';
 import { TransactionType } from './model/transaction-type.entity';
+import { JwtService } from '@nestjs/jwt';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
@@ -31,6 +32,10 @@ describe('TransactionController', () => {
         {
           provide: getRepositoryToken(Transaction),
           useClass: Repository
+        },
+        {
+          provide: JwtService,
+          useClass: class Stub {}
         }
       ]
     }).compile();
