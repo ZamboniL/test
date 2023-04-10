@@ -1,4 +1,4 @@
-import { Box, Container, Link as CLink, Text, Divider } from "@chakra-ui/react";
+import { Box, Container, Link as CLink, Divider } from "@chakra-ui/react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
