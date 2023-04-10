@@ -14,6 +14,7 @@ export class TypeOrmFilter extends BaseExceptionFilter {
       case '23503':
         response.status(400).json({
           statusCode: 400,
+          type: 'foreign-key-violation',
           message: `'${value}' is not a valid '${column}'.`,
           error: 'Bad Request'
         });
@@ -22,7 +23,8 @@ export class TypeOrmFilter extends BaseExceptionFilter {
       case '23505':
         response.status(400).json({
           statusCode: 400,
-          message: `'${value}' is already used.`,
+          type: 'unique-violation',
+          message: `${column} '${value}' is already used.`,
           error: 'Bad Request'
         });
       default:

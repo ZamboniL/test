@@ -43,12 +43,10 @@ services:
       - NODE_ENV=development
     build:
       context: ./front
-      target: runner
+      target: deps
     container_name: client
     volumes:
       - ./front:/usr/app
-      - /usr/app/node_modules
-      - /usr/app/.next
     ports:
       - "3000:3000"
     command: npm run dev
