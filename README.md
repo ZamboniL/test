@@ -22,11 +22,13 @@ All other dependencies are handled by docker.
 - Run `docker-compose up -d --build` to start the application
 - Access the front-end application at `http://localhost:3000`
 - Access the back-end application at `http://localhost:4000`
+  - The OpenAPI documentation is available at `http://localhost:4000/api`
 
 ## Routes
 
 The back-end application has the following routes:
 
+- `GET /api` - Get OpenAPI documentation
 - `POST /auth/login` - Login
 - `POST /users` - Create a user
 - `DELETE /users` - Delete logged in user
