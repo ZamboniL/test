@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Alert,
   AlertDescription,
@@ -9,9 +12,6 @@ import {
   Input,
   Stack,
 } from "@chakra-ui/react";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { registerUserSchema } from "../validation/registerUserSchema";
 import { CreateUserDto } from "../types/CreateUserDto";
 import { useCreateUser } from "../api/createUser";
@@ -24,6 +24,7 @@ export default function RegisterUserForm() {
   } = useForm<CreateUserDto>({
     resolver: yupResolver(registerUserSchema),
   });
+
   const createUser = useCreateUser();
 
   return (
